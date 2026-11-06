@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="2026년 귀속 개인사업자·프리랜서 종합소득세 간편 추정 계산기. 설치와 서버 없이 실행하는 독립 HTML입니다."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'"><title>TAX해줘 | 종합소득세 간편 계산기</title><style>/* SUIT Variable | https://github.com/sun-typeface/SUIT
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="2026년 귀속 개인사업자·프리랜서 종합소득세 간편 추정 계산기. 설치와 서버 없이 실행하는 독립 HTML입니다."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'self'; form-action 'none'; base-uri 'none'"><title>TAX해줘 | 종합소득세 간편 계산기</title><style>/* SUIT Variable | https://github.com/sun-typeface/SUIT
 Copyright (c) 2022, SUNN (http://sun.fo/suit),
 with Reserved Font Name SUIT.
 
@@ -504,6 +504,8 @@ body{height:100dvh;overflow:hidden;display:flex;flex-direction:column}
 .consult-actions{padding:0 24px;display:flex;gap:10px}.consult-actions button{min-height:50px;border-radius:12px;padding:12px 15px;font-size:14px;font-weight:700}.consult-next{flex:1;border:1px solid #24566b;background:#24566b;color:#fff}.consult-next:hover{background:#1c4556}.consult-back{border:1px solid #8390a0;background:#fff;color:#465466}
 .consult-privacy{padding:0 24px 18px;font-size:11px;line-height:1.9;color:#535d6b;margin:15px 0 0}.consult-error{font-size:13px;line-height:1.7;color:#8a3527;background:#fff0ec;border:1px solid #b66650;padding:10px 12px;border-radius:10px;margin:0 0 16px}
 .consult-review{margin:0}.consult-review div{padding:12px 0;border-bottom:1px solid #d9dfe6}.consult-review dt{font-size:12px;color:#535d6b}.consult-review dd{font-size:14px;font-weight:650;margin:5px 0 0;overflow-wrap:anywhere;word-break:break-word}.consult-pending{padding:13px;background:#edf2f6;border:1px solid #9ca6b4;border-radius:12px;font-size:12px;line-height:1.85;margin:18px 0 0;color:#465466}.consult-pending strong{display:block;color:#252a32}
+textarea.consult-text{resize:vertical;line-height:1.7;min-height:130px}#consult-review-message{white-space:pre-wrap}.consult-consent{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.8;padding:12px 0;cursor:pointer}.consult-consent input{width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:#24566b}.consult-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}.consult-actions button:disabled,.consult-close:disabled{opacity:.6;cursor:wait}
+.consult-policy-link{font-size:11px;color:#345c6d;text-underline-offset:3px}.consult-help a{color:#345c6d;text-underline-offset:3px}
 @media(max-width:1200px){.sidebar{height:calc(100dvh - 110px)}}
 @media(max-width:1000px){.sidebar{height:auto}}
 @media(max-width:600px){.consult-dock{flex-basis:76px;padding:10px 16px}.consult-dock p{display:block;font-size:11px}.consult-dock p span{display:block;margin-top:3px}.consult-dock strong{font-size:13px}#consult-open{min-width:150px;padding:12px 17px;font-size:15px;gap:10px}#consult-dialog{border-width:6px;border-radius:32px}.consult-content{padding:23px 20px 16px;min-height:330px}.consult-head,.consult-actions{padding-left:20px;padding-right:20px}.consult-progress{padding:0 20px}.consult-privacy{padding-left:20px;padding-right:20px}#consult-title{font-size:21px}}
@@ -622,7 +624,7 @@ body{height:100dvh;overflow:hidden;display:flex;flex-direction:column}
 <div id="toast" role="status" hidden></div><div id="live-status" class="sr-only" role="status" aria-live="polite"></div>
 <noscript><p style="padding:20px;background:#fff0ed">이 계산기를 사용하려면 브라우저의 JavaScript를 활성화해야 합니다.</p></noscript>
 
-<footer class="consult-dock" aria-label="상담 안내"><p><strong>TAX해줘</strong><span>궁금한 점을 남겨 주세요.</span></p><button type="button" id="consult-open" aria-haspopup="dialog" aria-controls="consult-dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2v-10a9 9 0 0 1 18 0Z"/><path d="M7 11h8M7 15h5"/></svg><span>상담하기</span><span aria-hidden="true">↗</span></button></footer>
+<footer class="consult-dock" aria-label="상담 안내"><p><strong>TAX해줘</strong><span>궁금한 점을 남겨 주세요.</span><a class="consult-policy-link" href="privacy.html" target="_blank" rel="noopener">개인정보처리방침</a></p><button type="button" id="consult-open" aria-haspopup="dialog" aria-controls="consult-dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2v-10a9 9 0 0 1 18 0Z"/><path d="M7 11h8M7 15h5"/></svg><span>상담하기</span><span aria-hidden="true">↗</span></button></footer>
 <dialog id="consult-dialog" aria-labelledby="consult-title" aria-describedby="consult-intro">
  <div class="consult-speaker" aria-hidden="true"></div><button id="consult-close" class="consult-close" type="button" aria-label="상담 창 닫기">×</button>
  <form id="consult-form" novalidate autocomplete="off">
@@ -635,11 +637,11 @@ body{height:100dvh;overflow:hidden;display:flex;flex-direction:column}
     <label class="consult-purpose"><input id="consult-purpose-other" type="radio" name="consult-purpose" value="그 외에 이 사이트 주인에게 문의하기"><span><b>그 밖의 문의</b><small>사이트 운영자에게 전하고 싶은 이야기</small></span><span class="consult-radio" aria-hidden="true"></span></label>
    </fieldset>
    <section id="consult-step-1" class="consult-step" hidden><label class="consult-field" for="consult-phone">연락받을 전화번호 <span>선택</span></label><input id="consult-phone" class="consult-text" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" placeholder="010-1234-5678" aria-describedby="consult-phone-help"><p id="consult-phone-help" class="consult-help">전화 연락을 원하시면 입력해 주세요.<br>이메일로만 답변받으셔도 괜찮습니다.</p><button id="consult-skip" class="consult-skip" type="button">전화번호 없이 건너뛰기 →</button></section>
-   <section id="consult-step-2" class="consult-step" hidden><label class="consult-field" for="consult-email">답변받을 이메일 <span>필수</span></label><input id="consult-email" class="consult-text" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="name@example.com" aria-describedby="consult-email-help"><p id="consult-email-help" class="consult-help">답변받을 수 있는 이메일 주소를 입력해 주세요.</p></section>
-   <section id="consult-step-3" class="consult-step" hidden><dl class="consult-review"><div><dt>문의 목적</dt><dd id="consult-review-purpose"></dd></div><div><dt>전화번호</dt><dd id="consult-review-phone"></dd></div><div><dt>이메일</dt><dd id="consult-review-email"></dd></div></dl><p class="consult-pending"><strong>문의는 전송되지 않았습니다.</strong>현재 상담 창의 입력 기능만 제공하며, 이메일 접수는 준비 중입니다.</p></section>
+   <section id="consult-step-2" class="consult-step" hidden><label class="consult-field" for="consult-email">답변받을 이메일 <span>필수</span></label><input id="consult-email" class="consult-text" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="name@example.com"><label class="consult-field" for="consult-message">문의 내용 <span>필수</span></label><textarea id="consult-message" class="consult-text" rows="5" minlength="5" maxlength="3000" placeholder="궁금한 내용을 적어 주세요." aria-describedby="consult-message-help"></textarea><p id="consult-message-help" class="consult-help">5~3,000자까지 입력할 수 있습니다. 주민등록번호, 계좌번호 등 민감한 정보는 적지 마세요.</p><p class="consult-help">연락처와 문의 내용은 상담 답변에 이용하며 상담 종료 후 30일 이내 운영자가 메일함에서 직접 삭제합니다. 동의하지 않아도 계산기는 이용할 수 있습니다. <a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침 보기</a></p><label class="consult-consent"><input id="consult-consent" type="checkbox"><span>이메일·문의 내용·선택 전화번호의 수집·이용에 동의합니다.</span></label><label class="consult-consent"><input id="consult-overseas" type="checkbox"><span>Vercel(미국)과 Google(미국 등 글로벌 서버)을 통한 상담 정보의 국외 처리·보관에 동의합니다. 자세한 목적·항목·방법·기간은 개인정보처리방침 3항에 안내합니다.</span></label><div class="consult-trap" aria-hidden="true"><label for="consult-website">Website</label><input id="consult-website" tabindex="-1" autocomplete="off" maxlength="100"></div></section>
+   <section id="consult-step-3" class="consult-step" hidden><dl class="consult-review"><div><dt>문의 목적</dt><dd id="consult-review-purpose"></dd></div><div><dt>전화번호</dt><dd id="consult-review-phone"></dd></div><div><dt>이메일</dt><dd id="consult-review-email"></dd></div><div><dt>문의 내용</dt><dd id="consult-review-message"></dd></div></dl><p id="consult-receipt" class="consult-pending" role="status" hidden></p></section>
   </div>
   <div class="consult-actions"><button type="button" id="consult-back" class="consult-back" hidden>이전</button><button type="submit" id="consult-next" class="consult-next">다음 →</button></div>
-  <p class="consult-privacy">현재 입력 내용은 외부로 전송·저장되지 않습니다.<br>창을 닫으면 입력한 연락처가 지워집니다.</p>
+  <p class="consult-privacy">‘문의 보내기’를 누르면 연락처와 문의 내용이 운영자 Gmail로 전송됩니다. 계산기에 입력한 금액은 보내지 않습니다. 전송한 내용은 창을 닫아도 운영자의 메일함에 남습니다.</p>
  </form>
 </dialog><div id="consult-live" class="sr-only" role="status" aria-live="polite"></div>
 
@@ -908,31 +910,42 @@ globalThis.TaxEngine = (() => {
 </script>
 <script id="consult-ui">(()=>{
  'use strict';
- const $=id=>document.getElementById('consult-'+id),dialog=$('dialog'),form=$('form');let step=0;
+ const $=id=>document.getElementById('consult-'+id),dialog=$('dialog'),form=$('form');let step=0,busy=false,sent=false,attempt=0;
  const purposes=['tax','site','other'],titles=['어떤 도움이 필요하세요?','연락받을 번호를 알려주세요.','이메일을 알려주세요.','입력 내용을 확인해 주세요.'];
- const intros=['문의 목적에 맞는 카드를 골라 주세요.','전화번호는 입력하지 않아도 괜찮습니다.','답변받으실 이메일 주소를 입력해 주세요.','이메일 접수 연결 전이라 문의는 전송되지 않습니다.'];
+ const intros=['문의 목적에 맞는 카드를 골라 주세요.','전화번호는 입력하지 않아도 괜찮습니다.','답변받을 이메일과 문의 내용을 입력해 주세요.','아래 내용을 확인한 뒤 문의 보내기를 눌러 주세요.'];
  function show(next){
   step=next;for(let n=0;n<4;n++)$('step-'+n).hidden=n!==step;
   for(let n=0;n<3;n++)$('progress-'+n).setAttribute('data-current',String(n<=step));
   $('title').textContent=titles[step];$('intro').textContent=intros[step];$('counter').textContent=step===3?'입력 확인':String(step+1).padStart(2,'0')+' / 03';
-  $('back').hidden=step===0;$('back').textContent=step===3?'내용 수정':'이전';$('next').textContent=step===3?'닫기':step===2?'확인':'다음 →';
-  $('error').hidden=true;$('error').textContent='';for(const id of ['phone','email'])$(id).removeAttribute('aria-invalid');
+  $('back').hidden=step===0||sent;$('back').textContent=step===3?'내용 수정':'이전';$('next').textContent=sent?'닫기':step===3?'문의 보내기':step===2?'입력 내용 확인':'다음 →';
+  $('error').hidden=true;$('error').textContent='';for(const id of ['phone','email','message','consent','overseas'])$(id).removeAttribute('aria-invalid');
   $('title').setAttribute('tabindex','-1');$('title').focus();dialog.scrollTop=0;$('live').textContent=titles[step];
  }
- function error(message,id){$('error').textContent=message;$('error').hidden=false;if(id){$(id).setAttribute('aria-invalid','true');$(id).focus();}else $('purpose-tax').focus();}
- function advance(){
+ function error(message,id){$('error').textContent=message;$('error').hidden=false;if(id){$(id).setAttribute('aria-invalid','true');$(id).focus();}else if(step===0)$('purpose-tax').focus();else $('error').scrollIntoView({block:'nearest'});}
+ async function advance(){
+  if(busy)return;
   const selected=purposes.find(p=>$('purpose-'+p).checked);
   if(step===0){if(!selected)return error('문의 목적을 하나 선택해 주세요.');return show(1);}
   if(step===1){const phone=$('phone').value.trim(),digits=phone.replace(/\D/g,'');if(phone&&(!/^\+?[\d()\s-]+$/.test(phone)||digits.length<7||digits.length>15))return error('연락 가능한 전화번호를 확인해 주세요. 또는 건너뛰기를 선택하세요.','phone');return show(2);}
-  if(step===2){$('email').value=$('email').value.trim();if(!$('email').value||!$('email').validity.valid)return error('답변받을 이메일 주소를 올바르게 입력해 주세요.','email');$('review-purpose').textContent=$('purpose-'+selected).value;$('review-phone').textContent=$('phone').value.trim()||'입력하지 않음';$('review-email').textContent=$('email').value;return show(3);}
-  dialog.close();
+  if(step===2){$('email').value=$('email').value.trim();if(!$('email').value||!$('email').validity.valid)return error('답변받을 이메일 주소를 올바르게 입력해 주세요.','email');if($('message').value.trim().length<5)return error('문의 내용을 5자 이상 적어 주세요.','message');if(!$('consent').checked)return error('상담 접수를 위한 전송 동의를 확인해 주세요.','consent');if(!$('overseas').checked)return error('국외 처리·보관 동의를 확인해 주세요.','overseas');for(const [key,value] of Object.entries({purpose:$('purpose-'+selected).value,phone:$('phone').value.trim()||'입력하지 않음',email:$('email').value,message:$('message').value.trim()}))$('review-'+key).textContent=value;return show(3);}
+  if(sent)return dialog.close();
+  if(!/^https?:$/.test(location.protocol))return error('이메일 접수는 TAX해줘 웹사이트에서 이용해 주세요.');
+  busy=true;const current=++attempt;for(const id of ['next','back','close'])$(id).disabled=true;$('next').textContent='보내는 중…';form.setAttribute('aria-busy','true');
+  try{
+   const response=await fetch('/api/consult',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({purpose:$('purpose-'+selected).value,phone:$('phone').value.trim(),email:$('email').value,message:$('message').value.trim(),consent:$('consent').checked,overseasConsent:$('overseas').checked,website:$('website').value}),signal:AbortSignal.timeout(30000)});
+   const result=await response.json().catch(()=>({}));if(current!==attempt)return;
+   if(!response.ok)throw new Error(response.status===429?'접수가 잠시 많습니다. 잠시 후 다시 시도해 주세요.':result.message||'접수하지 못했습니다. 잠시 후 다시 이용해 주세요.');
+   sent=true;$('receipt').textContent=result.message;$('receipt').hidden=false;show(3);$('title').textContent='문의가 접수되었습니다.';$('intro').textContent='남겨 주신 연락처로 답변드리겠습니다.';$('live').textContent='문의가 접수되었습니다.';
+  }catch(e){if(current===attempt)error(e.name==='TimeoutError'?'접수 결과를 확인하지 못했습니다. 중복 접수를 피하려면 잠시 기다린 뒤 다시 시도해 주세요.':e.message==='Failed to fetch'?'네트워크 연결을 확인해 주세요.':e.message);}
+  finally{if(current===attempt){busy=false;for(const id of ['next','back','close'])$(id).disabled=false;form.removeAttribute('aria-busy');$('next').textContent=sent?'닫기':'문의 보내기';}}
  }
- $('open').addEventListener('click',()=>{form.reset();dialog.showModal();show(0);});
+ $('open').addEventListener('click',()=>{form.reset();sent=false;$('receipt').hidden=true;dialog.showModal();show(0);});
  $('close').addEventListener('click',()=>dialog.close());
  $('back').addEventListener('click',()=>show(step===3?0:step-1));
  $('skip').addEventListener('click',()=>{$('phone').value='';show(2);});
  form.addEventListener('submit',event=>{event.preventDefault();advance();});
- dialog.addEventListener('close',()=>{form.reset();for(const id of ['purpose','phone','email'])$('review-'+id).textContent='';$('live').textContent='상담 창을 닫았습니다. 문의는 전송되지 않았습니다.';$('open').focus();});
+ dialog.addEventListener('cancel',event=>{if(busy)event.preventDefault();});
+ dialog.addEventListener('close',()=>{attempt++;form.reset();for(const id of ['purpose','phone','email','message'])$('review-'+id).textContent='';$('live').textContent=sent?'문의가 접수되었습니다.':'상담 창을 닫았습니다. 문의는 전송되지 않았습니다.';$('open').focus();});
 })();
 </script>
 </body></html>
