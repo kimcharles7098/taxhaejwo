@@ -1,27 +1,60 @@
-const owner = 'mongdingding@gmail.com';
 const purposes = ['세무 회계 상담', '이 사이트 기능 상담', '그 외에 이 사이트 주인에게 문의하기'];
-const reply = (status, message) => Response.json({message}, {status, headers: {'Cache-Control':'no-store'}});
+const reply = (status, message, headers) => Response.json({message}, {status, headers: {'Cache-Control':'no-store', ...headers}});
+const accepted = () => reply(200, '문의가 접수되었습니다. 남겨 주신 연락처로 답변드리겠습니다.');
+const maxBytes = 16 * 1024;
+const windowMs = 10 * 60 * 1000;
+// The firewall enforces the shared limit. This second limit covers concurrent sends on one instance.
+const sendWindows = new Map();
 
-export async function POST(request) {
+function reserveSend(ip) {
+  const now = Date.now();
+  // Windows are inserted in expiry order.
+  for (const [key, entry] of sendWindows) {
+    if (entry.until > now) break;
+    sendWindows.delete(key);
+  }
+  const entry = sendWindows.get(ip);
+  if (!entry) sendWindows.set(ip, {count: 1, until: now + windowMs});
+  else if (entry.count >= 3) return false;
+  else entry.count++;
+  return true;
+}
+
+function validEmail(value) {
+  if (typeof value !== 'string' || value.length > 254 || /[\r\n]/.test(value)) return false;
+  const [local, domain, ...extra] = value.split('@');
+  return extra.length === 0 && local.length <= 64 && domain !== undefined &&
+    /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*$/.test(local) &&
+    /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(domain);
+}
+
+async function consult(request) {
+  if (request.method !== 'POST') return reply(405, '잘못된 요청입니다.', {Allow: 'POST'});
   if (request.headers.get('origin') !== 'https://taxhaejwo.vercel.app') return reply(403, '이 사이트에서 다시 접수해 주세요.');
-  if (!request.headers.get('content-type')?.startsWith('application/json')) return reply(415, '잘못된 요청입니다.');
-  if (Number(request.headers.get('content-length')) > 16384) return reply(413, '문의 내용이 너무 깁니다.');
+  if (request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json') return reply(415, '잘못된 요청입니다.');
+  if (Number(request.headers.get('content-length')) > maxBytes) return reply(413, '문의 내용이 너무 깁니다.');
   let input;
   try {
-    const text = await request.text();
-    if (Buffer.byteLength(text) > 16384) return reply(413, '문의 내용이 너무 깁니다.');
-    input = JSON.parse(text);
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of request.body) {
+      size += chunk.byteLength;
+      if (size > maxBytes) return reply(413, '문의 내용이 너무 깁니다.');
+      chunks.push(chunk);
+    }
+    input = JSON.parse(Buffer.concat(chunks).toString('utf8'));
   } catch { return reply(400, '입력 내용을 확인해 주세요.'); }
   if (!input || typeof input !== 'object' || Array.isArray(input)) return reply(400, '입력 내용을 확인해 주세요.');
-  const {purpose, email, phone = '', message, consent, overseasConsent, website = ''} = input;
-  if (website !== '') return reply(400, '접수할 수 없는 요청입니다.');
-  if (!purposes.includes(purpose) || typeof email !== 'string' || email.length > 254 ||
-      !/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,}$/.test(email) ||
-      typeof phone !== 'string' || phone.length > 32 || (phone && (!/^\+?[\d() -]+$/.test(phone) || phone.replace(/\D/g,'').length < 7 || phone.replace(/\D/g,'').length > 15)) ||
+  const {purpose, email, phone, message, consent, overseasConsent, website} = input;
+  if (!purposes.includes(purpose) || !validEmail(email) || typeof website !== 'string' ||
+      typeof phone !== 'string' || phone.length > 32 || /[\r\n]/.test(phone) ||
+      (phone && (!/^\+?[\d()\s-]*$/.test(phone) || !/^\d{7,15}$/.test(phone.replace(/\D/g,'')))) ||
       typeof message !== 'string' || message.trim().length < 5 || message.length > 3000 || consent !== true || overseasConsent !== true) return reply(400, '연락처, 문의 내용과 전송 동의를 확인해 주세요.');
-  const {GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN, CONSULT_ENABLED} = process.env;
+  if (website !== '') return accepted();
+  const {GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN, CONSULT_ENABLED, CONSULT_RECIPIENT: owner} = process.env;
   // Enable only after the /api/consult firewall rate limit is active.
-  if (CONSULT_ENABLED !== 'true' || !GMAIL_CLIENT_ID || !GMAIL_CLIENT_SECRET || !GMAIL_REFRESH_TOKEN) return reply(503, '상담 이메일 연결을 준비 중입니다. 잠시 후 다시 이용해 주세요.');
+  if (CONSULT_ENABLED !== 'true' || !validEmail(owner) || !GMAIL_CLIENT_ID || !GMAIL_CLIENT_SECRET || !GMAIL_REFRESH_TOKEN) return reply(503, '상담 이메일 연결을 준비 중입니다. 잠시 후 다시 이용해 주세요.');
+  if (!reserveSend(request.headers.get('x-vercel-forwarded-for'))) return reply(429, '잠시 기다린 뒤 다시 시도해 주세요.');
   let stage = 'authorization';
   try {
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
@@ -40,9 +73,11 @@ export async function POST(request) {
     if (!sent.ok) throw new Error('Send failed');
     const result = await sent.json();
     if (!result.id) throw new Error('Missing receipt');
-    return reply(200, '문의가 접수되었습니다. 남겨 주신 연락처로 답변드리겠습니다.');
+    return accepted();
   } catch {
     console.error('Consultation Gmail request failed:', stage);
     return reply(502, stage === 'delivery' ? '접수 결과를 확인하지 못했습니다. 중복 접수를 피하려면 잠시 기다린 뒤 다시 시도해 주세요.' : '이메일 연결에 문제가 있습니다. 잠시 후 다시 이용해 주세요.');
   }
 }
+
+export default {fetch: consult};
